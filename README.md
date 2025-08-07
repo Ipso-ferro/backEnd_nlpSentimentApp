@@ -58,8 +58,9 @@ The API uses a preprocessing pipeline to clean and standardize user input before
 
 ### To run locally:
 
-#### run in console to Install dependencies:
+#### run in console to Install dependencies and enviroment:
 
+python -m venv venv
 pip install -r requirements.txt
 
 #### run in console to Start the server
