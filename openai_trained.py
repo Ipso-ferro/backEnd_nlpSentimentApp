@@ -1,11 +1,9 @@
-# pip install openai
 import os, io, json
 from openai import OpenAI
-from dataPreparing import cleaned_rows  # list of {"text": "...", "label": "..."} dicts
+from dataPreparing import cleaned_rows 
 import random
 
-client = OpenAI(api_key="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")
-
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 from dataPreparing import cleaned_rows
 
@@ -31,6 +29,8 @@ def classify(comment: str) -> dict:
                 "role": "system",
                 "content": (
                     "You are a sentiment classifier for short English reviews. "
+                    "if the text has emojis identify the sentiment of the text and return the sentiment"
+                    "if the text has letters random return neutral sentiment. "
                     "Return ONLY valid JSON: {\"sentiment\":\"positive|negative\"}."
                 ),
             },
