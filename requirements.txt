@@ -5,3 +5,9 @@ pandas
 scikit-learn
 python-dotenv
 nltk
+beautifulsoup4
+lxml
+tqdm
+symspellpy
+flask
+symspellpy

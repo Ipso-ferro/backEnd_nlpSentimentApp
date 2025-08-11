@@ -1,77 +1,298 @@
-# 🧠 backEnd_nlpSentimentApp
+# 🚀 NLP Sentiment App
 
-This is the backend API for the **NLP Sentiment Analysis Web App**, built using **Python** and connected to the **OpenAI language model**. It classifies Amazon product reviews as either **"Positive"** or **"Negative"** using real-time inference.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-API-orange.svg)](https://openai.com/api/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-This backend serves as the core of the intelligent system and integrates with a **React.js frontend** to provide a seamless user experience for sentiment classification.
+> A complete end-to-end sentiment analysis pipeline that transforms raw review data into a production-ready web service using OpenAI's models.
 
----
+## ✨ Features
 
-## 🚀 Key Features
+- 📊 **Complete Data Pipeline** - From raw HTML reviews to clean datasets
+- 🤖 **Dual Model Support** - Fine-tuned models OR few-shot prompting
+- 🎨 **Modern Web UI** - Bootstrap-powered real-time classification interface
+- 🔄 **Flexible Architecture** - Easy to swap between model approaches
+- 📈 **Production Ready** - Built with Flask for easy deployment
 
-- ✅ **RESTful API** with a `/predict` endpoint (Flask)
-- ✅ **Text preprocessing pipeline** based on notebook logic
-- ✅ **Integration with OpenAI API** for real-time sentiment prediction
-- ✅ **Input validation and error handling**
-- ✅ **Basic test suite** for backend and model inference
-- ✅ **Notebook** for training, cleaning, and evaluation
-- ✅ **Ready for deployment** (cloud hosting)
+## 🏗️ Architecture
 
----
+```mermaid
+graph TD
+    A[User Browser] --> B[Flask Backend]
+    B --> C[classify function]
+    C --> D[OpenAI API]
+    D --> E[Fine-tuned Model OR Few-shot Prompt]
+    E --> D
+    D --> C
+    C --> B
+    B --> F[Bootstrap UI]
+    F --> A
+```
 
-## 🧹 Preprocessing Steps
+### 📋 Data Pipeline
 
-The API uses a preprocessing pipeline to clean and standardize user input before inference:
+```
+Raw Reviews (.review files)
+           ↓
+    build_csv_from_reviews.py
+           ↓
+      reviews.csv
+           ↓
+    prepare_for_finetune.py
+           ↓
+   JSONL Training Files
+           ↓
+      fine_tune.py
+           ↓
+    Fine-tuned Model
+```
 
-- Convert to lowercase
-- Remove punctuation and stopwords
-- (Optional) Tokenization or chunking
-- (Optional) Padding or truncation
-- Filtering short or irrelevant reviews
+## 📁 Project Structure
 
----
+```
+nlp-sentiment-app/
+├── 🐍 app.py                    # Main Flask application
+├── 🧠 openai_trained.py         # Classification logic
+├── 🔧 dataPreparing.py          # Data cleaning utilities
+├── 📂 scripts/
+│   ├── build_csv_from_reviews.py
+│   └── prepare_for_finetune.py
+├── 📂 data/
+│   ├── books/
+│   ├── electronics/
+│   ├── dvd/
+│   └── kitchen_&_housewares/
+├── 📂 artifacts/
+│   ├── train.jsonl
+│   ├── val.jsonl
+│   └── test.jsonl
+├── 📊 reviews.csv
+├── 📋 requirements.txt
+└── 📖 README.md
+```
 
-## 📦 Project Structure
-├── app.py # API entry point
+## 🚀 Quick Start
 
-├── openai_client.py # Wrapper for OpenAI API requests
+### Prerequisites
 
-├── preprocessing.py # Text cleaning and processing functions
+- ![Python](https://img.shields.io/badge/Python-3.10+-blue) Python 3.10+
+- ![OpenAI](https://img.shields.io/badge/OpenAI-API_Key-orange) OpenAI API key
 
-├── notebook_model.ipynb # Training and data exploration
+### 1️⃣ Clone & Setup
 
-├── test_backend.py # Basic unit tests
+```bash
+git clone https://github.com/yourusername/nlp-sentiment-app.git
+cd nlp-sentiment-app
 
-├── requirements.txt # Dependencies
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-└── README.md # Project documentation
-
-
-## EXAMPLE OF JSON RESPONSE:
-
-{
-  "sentiment": "Positive",
-  "confidence": 0.93
-}
-
-
-## 🧪 Development & Testing
-
-### To run locally:
-
-#### run in console to Install dependencies and enviroment:
-
+# Install dependencies
 pip install -r requirements.txt
+```
 
+### 2️⃣ Configure API Key
 
-#### run in console to Start the server
+```bash
+export OPENAI_API_KEY="your-api-key-here"
+# Windows PowerShell: $env:OPENAI_API_KEY="your-api-key-here"
+```
+
+> ⚠️ **Security Note**: Never commit your API key to version control!
+
+### 3️⃣ Prepare Your Data
+
+```bash
+# Build dataset from raw reviews (optional)
+python scripts/build_csv_from_reviews.py
+
+# Prepare training files
+python scripts/prepare_for_finetune.py
+```
+
+### 4️⃣ Choose Your Model Path
+
+#### Option A: Fine-tuned Model (Recommended) 🎯
+
+```bash
+python scripts/fine_tune.py
+# Note the model ID: ft:gpt-4o-mini-2024-07-18:...
+export FINETUNED_MODEL="ft:gpt-4o-mini-2024-07-18:your-model-id"
+```
+
+#### Option B: Few-shot Prompting (Quick Start) ⚡
+
+Skip the fine-tuning step - the app will use few-shot examples automatically!
+
+### 5️⃣ Launch the App
+
+```bash
 python app.py
+```
 
-## To test the API:
+🎉 Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser!
 
-### run in console
+## 🔧 How It Works
 
-curl -X POST http://localhost:8000/predict \
-  -H "Content-Type: application/json" \
-  -d '{"text": "I hated this product."}'
+### 🧹 Data Processing Pipeline
 
+1. **Raw Data Ingestion**
+   - Parses HTML-like `.review` files using BeautifulSoup
+   - Extracts clean text content
+   - Labels based on filename (`positive.review` → positive)
 
+2. **Text Cleaning**
+   - Lowercase conversion
+   - Punctuation removal (keeps apostrophes in contractions)
+   - Stopword filtering
+   - Optional spell correction
+   - Deduplication
+
+3. **Training Data Generation**
+   ```json
+   {
+     "messages": [
+       {"role": "user", "content": "loved fast delivery amazing quality"},
+       {"role": "assistant", "content": "positive"}
+     ]
+   }
+   ```
+
+### 🤖 Model Options
+
+| Feature | Fine-tuned Model | Few-shot Prompting |
+|---------|-----------------|-------------------|
+| Setup Time | Longer (training required) | Immediate |
+| Accuracy | Higher | Good |
+| Cost | Lower per request | Higher per request |
+| Customization | Full control | Limited |
+| Best For | Production, scale | Prototyping, testing |
+
+## 🌐 API Reference
+
+### `POST /classify`
+
+**Request:**
+```json
+{
+  "text": "This product exceeded my expectations!"
+}
+```
+
+**Response:**
+```json
+{
+  "sentiment": "positive",
+  "confidence": 0.95
+}
+```
+
+### Example Usage
+
+```javascript
+fetch('/classify', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({text: 'Great product, highly recommend!'})
+})
+.then(response => response.json())
+.then(data => console.log(data));
+```
+
+## 🎨 UI Features
+
+- **Real-time Classification** - Instant sentiment analysis as you type
+- **Visual Feedback** - Color-coded results (🟢 positive, 🔴 negative)
+- **Confidence Scores** - See how certain the model is
+- **Responsive Design** - Works on desktop and mobile
+- **Clean Interface** - Bootstrap-powered modern UI
+
+## 🛠️ Troubleshooting
+
+<details>
+<summary><strong>🔴 Fine-tuning Upload Error</strong></summary>
+
+**Problem:** `400: File type not supported`
+
+**Solution:** Make sure you're uploading JSONL files with `purpose="fine-tune"`, not CSV files.
+</details>
+
+<details>
+<summary><strong>🔴 SDK Error</strong></summary>
+
+**Problem:** `TypeError: create() got an unexpected keyword argument 'response_format'`
+
+**Solution:** Update your OpenAI SDK:
+```bash
+pip install -U openai
+```
+</details>
+
+<details>
+<summary><strong>🔴 Token Limit Error</strong></summary>
+
+**Problem:** Fine-tune job failed due to token limits
+
+**Solution:** Rebuild with shorter examples (192-256 tokens) and ensure deduplication.
+</details>
+
+<details>
+<summary><strong>🔴 Model ID Confusion</strong></summary>
+
+**Problem:** Using job ID instead of model ID
+
+**Solution:** Use the fine-tuned model ID (`ft:...`) for inference, not the job ID (`ftjob_...`).
+</details>
+
+## 🗺️ Roadmap
+
+- [ ] 🔒 Add rate limiting and request logging
+- [ ] ❤️ Health check endpoint (`/health`)
+- [ ] 💾 SQLite integration for prediction storage
+- [ ] 🔄 Automatic model retraining pipeline
+- [ ] 🐳 Docker containerization
+- [ ] 📊 Analytics dashboard
+- [ ] 🌍 Multi-language support
+- [ ] 📱 Mobile app integration
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+Built with ❤️ using these amazing tools:
+
+- [**Flask**](https://flask.palletsprojects.com/) - Lightweight web framework
+- [**OpenAI API**](https://openai.com/api/) - Powerful language models
+- [**Bootstrap**](https://getbootstrap.com/) - Responsive UI framework
+- [**BeautifulSoup**](https://www.crummy.com/software/BeautifulSoup/) - HTML parsing
+- [**pandas**](https://pandas.pydata.org/) - Data manipulation
+
+## 📞 Support
+
+- 📧 **Issues**: [GitHub Issues](https://github.com/yourusername/nlp-sentiment-app/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/nlp-sentiment-app/discussions)
+- 📖 **Wiki**: [Project Wiki](https://github.com/yourusername/nlp-sentiment-app/wiki)
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if you find it helpful!**
+
+Made with 🧠 and ☕ by [Cesar Ocampo](https://github.com/ipso-ferro)
+
+</div>
