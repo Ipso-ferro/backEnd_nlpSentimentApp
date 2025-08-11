@@ -230,36 +230,10 @@ pip install -U openai
 ```
 </details>
 
-<details>
-<summary><strong>🔴 Token Limit Error</strong></summary>
-
-**Problem:** Fine-tune job failed due to token limits
-
-**Solution:** Rebuild with shorter examples (192-256 tokens) and ensure deduplication.
-</details>
-
-<details>
-<summary><strong>🔴 Model ID Confusion</strong></summary>
-
-**Problem:** Using job ID instead of model ID
-
-**Solution:** Use the fine-tuned model ID (`ft:...`) for inference, not the job ID (`ftjob_...`).
-</details>
-
-## 🗺️ Roadmap
-
-- [ ] 🔒 Add rate limiting and request logging
-- [ ] ❤️ Health check endpoint (`/health`)
-- [ ] 💾 SQLite integration for prediction storage
-- [ ] 🔄 Automatic model retraining pipeline
-- [ ] 🐳 Docker containerization
-- [ ] 📊 Analytics dashboard
-- [ ] 🌍 Multi-language support
-- [ ] 📱 Mobile app integration
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how to get started:
+Welcome contributions! Here's how to get started:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -271,23 +245,6 @@ We welcome contributions! Here's how to get started:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-Built with ❤️ using these amazing tools:
-
-- [**Flask**](https://flask.palletsprojects.com/) - Lightweight web framework
-- [**OpenAI API**](https://openai.com/api/) - Powerful language models
-- [**Bootstrap**](https://getbootstrap.com/) - Responsive UI framework
-- [**BeautifulSoup**](https://www.crummy.com/software/BeautifulSoup/) - HTML parsing
-- [**pandas**](https://pandas.pydata.org/) - Data manipulation
-
-## 📞 Support
-
-- 📧 **Issues**: [GitHub Issues](https://github.com/yourusername/nlp-sentiment-app/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/nlp-sentiment-app/discussions)
-- 📖 **Wiki**: [Project Wiki](https://github.com/yourusername/nlp-sentiment-app/wiki)
-
----
 
 <div align="center">
 
